@@ -2,6 +2,8 @@ package vivo.learn.rime.coolweather.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,6 +11,7 @@ import org.json.JSONObject;
 import vivo.learn.rime.coolweather.db.City;
 import vivo.learn.rime.coolweather.db.County;
 import vivo.learn.rime.coolweather.db.Province;
+import vivo.learn.rime.coolweather.gson.Weather;
 
 /**
  * Created by Administrator on 2017/9/16.
@@ -72,5 +75,20 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    /*
+     * parse JSON to Weather instance
+     */
+    public static Weather handleWeatherResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weathercontent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weathercontent, Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
